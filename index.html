@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>BI 数据看板</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#0f1117;color:#e2e8f0;min-height:100vh;padding:40px 20px}
+    .header{text-align:center;margin-bottom:40px}
+    .header h1{font-size:2rem;font-weight:700;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+    .header p{color:#94a3b8;font-size:0.95rem}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;max-width:1100px;margin:0 auto}
+    .card{background:#1e2330;border:1px solid #2d3748;border-radius:14px;padding:20px 22px;text-decoration:none;color:inherit;transition:all .2s;display:flex;align-items:center;gap:14px}
+    .card:hover{background:#252d3d;border-color:#667eea;transform:translateY(-2px);box-shadow:0 8px 24px rgba(102,126,234,.15)}
+    .icon{font-size:2rem;flex-shrink:0}
+    .card-body .name{font-size:1rem;font-weight:600;color:#e2e8f0;margin-bottom:4px}
+    .card-body .date{font-size:0.8rem;color:#64748b}
+    .badge{margin-left:auto;background:#667eea22;color:#818cf8;font-size:0.72rem;padding:3px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+    .badge.new{background:#10b98122;color:#34d399}
+    .section-title{max-width:1100px;margin:30px auto 12px;font-size:0.8rem;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:.08em}
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>📊 BI 数据看板</h1>
+    <p>数据分析仪表盘 · 任何人均可查看</p>
+  </div>
+
+  <div class="section-title">🕐 最新看板</div>
+  <div class="grid">
+    <a class="card" href="dashboard_0412_offline.html">
+      <span class="icon">📈</span>
+      <div class="card-body">
+        <div class="name">综合数据看板 0412</div>
+        <div class="date">2026-04-12 · 离线完整版</div>
+      </div>
+      <span class="badge new">最新</span>
+    </a>
+    <a class="card" href="dashboard_0411_offline.html">
+      <span class="icon">📈</span>
+      <div class="card-body">
+        <div class="name">综合数据看板 0411</div>
+        <div class="date">2026-04-11 · 离线完整版</div>
+      </div>
+      <span class="badge">离线版</span>
+    </a>
+    <a class="card" href="dashboard_0410_offline.html">
+      <span class="icon">📈</span>
+      <div class="card-body">
+        <div class="name">综合数据看板 0410</div>
+        <div class="date">2026-04-10 · 离线完整版</div>
+      </div>
+      <span class="badge">离线版</span>
+    </a>
+  </div>
+
+  <div class="section-title">📅 历史看板</div>
+  <div class="grid">
+    <a class="card" href="dashboard_0412.html">
+      <span class="icon">📊</span>
+      <div class="card-body"><div class="name">综合看板 0412</div><div class="date">2026-04-12</div></div>
+    </a>
+    <a class="card" href="dashboard_0411.html">
+      <span class="icon">📊</span>
+      <div class="card-body"><div class="name">综合看板 0411</div><div class="date">2026-04-11</div></div>
+    </a>
+    <a class="card" href="dashboard_0410.html">
+      <span class="icon">📊</span>
+      <div class="card-body"><div class="name">综合看板 0410</div><div class="date">2026-04-10</div></div>
+    </a>
+    <a class="card" href="dashboard_0409.html">
+      <span class="icon">📊</span>
+      <div class="card-body"><div class="name">综合看板 0409</div><div class="date">2026-04-09</div></div>
+    </a>
+    <a class="card" href="dashboard_0406.html">
+      <span class="icon">📊</span>
+      <div class="card-body"><div class="name">综合看板 0406</div><div class="date">2026-04-06</div></div>
+    </a>
+    <a class="card" href="dashboard_pro.html">
+      <span class="icon">💎</span>
+      <div class="card-body"><div class="name">Pro 看板</div><div class="date">专业版</div></div>
+    </a>
+  </div>
+
+  <div class="section-title">🌐 平台专项看板</div>
+  <div class="grid">
+    <a class="card" href="xiaohongshu_dashboard.html">
+      <span class="icon">📕</span>
+      <div class="card-body"><div class="name">小红书数据看板</div><div class="date">小红书平台专项</div></div>
+    </a>
+    <a class="card" href="tiktok_dashboard.html">
+      <span class="icon">🎵</span>
+      <div class="card-body"><div class="name">TikTok 数据看板</div><div class="date">TikTok 平台专项</div></div>
+    </a>
+    <a class="card" href="phprem_dashboard.html">
+      <span class="icon">💼</span>
+      <div class="card-body"><div class="name">PH·Prem 看板</div><div class="date">PH Prem 专项</div></div>
+    </a>
+    <a class="card" href="tiefankj_dashboard.html">
+      <span class="icon">📱</span>
+      <div class="card-body"><div class="name">铁饭KJ 看板</div><div class="date">铁饭KJ 专项</div></div>
+    </a>
+    <a class="card" href="all_platforms_dashboard.html">
+      <span class="icon">🌍</span>
+      <div class="card-body"><div class="name">全平台汇总看板</div><div class="date">所有平台综合</div></div>
+    </a>
+    <a class="card" href="bi_dashboard_v2.html">
+      <span class="icon">🔬</span>
+      <div class="card-body"><div class="name">BI 看板 v2</div><div class="date">第二版</div></div>
+    </a>
+    <a class="card" href="小红书_BI看板.html">
+      <span class="icon">📗</span>
+      <div class="card-body"><div class="name">小红书 BI 看板</div><div class="date">xhs_bi_dashboard</div></div>
+    </a>
+    <a class="card" href="PH·Prem_BI看板.html">
+      <span class="icon">⭐</span>
+      <div class="card-body"><div class="name">PH·Prem BI 看板</div><div class="date">xhs_bi_dashboard</div></div>
+    </a>
+  </div>
+
+  <div style="text-align:center;margin-top:48px;color:#334155;font-size:0.78rem">
+    Powered by GitHub Pages · 数据分析看板
+  </div>
+</body>
+</html>

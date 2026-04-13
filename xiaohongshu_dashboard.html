@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>小红书数据分析 · 2026年3月</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #ff2442 0%, #ff6b6b 50%, #ee5a6f 100%);
+      padding: 28px 40px;
+      border-bottom: 1px solid #2d3748;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header-left h1 { font-size: 26px; font-weight: 700; color: #fff; letter-spacing: .5px; }
+    .header-left p  { font-size: 13px; color: rgba(255,255,255,0.8); margin-top: 4px; }
+    .platform-badge {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.2);
+      border-radius: 12px; padding: 8px 18px;
+    }
+    .platform-badge span { font-size: 16px; font-weight: 600; color: #fff; }
+
+    .main { padding: 32px 40px; max-width: 1800px; margin: 0 auto; }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .kpi-card {
+      background: linear-gradient(145deg, #1e2235, #1a1f30);
+      border: 1px solid #2d3748;
+      border-radius: 16px;
+      padding: 20px 18px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,.4); }
+    .kpi-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 3px;
+    }
+    .kpi-card.red::before    { background: linear-gradient(90deg, #ff2442, #ff6b6b); }
+    .kpi-card.blue::before   { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+    .kpi-card.green::before  { background: linear-gradient(90deg, #10b981, #34d399); }
+    .kpi-card.purple::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+    .kpi-card.orange::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .kpi-card.pink::before   { background: linear-gradient(90deg, #ec4899, #f472b6); }
+    .kpi-card.cyan::before   { background: linear-gradient(90deg, #06b6d4, #22d3ee); }
+    .kpi-card.indigo::before { background: linear-gradient(90deg, #6366f1, #818cf8); }
+    .kpi-label { font-size: 11px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 8px; }
+    .kpi-value { font-size: 24px; font-weight: 700; color: #f1f5f9; line-height: 1; }
+    .kpi-sub   { font-size: 11px; color: #94a3b8; margin-top: 5px; }
+    .kpi-icon  { position: absolute; right: 16px; top: 18px; font-size: 26px; opacity: .15; }
+
+    .section-title {
+      font-size: 15px; font-weight: 600; color: #94a3b8;
+      text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 18px; padding-bottom: 10px;
+      border-bottom: 1px solid #2d3748;
+    }
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-bottom: 28px;
+    }
+    .chart-card {
+      background: linear-gradient(145deg, #1e2235, #1a1f30);
+      border: 1px solid #2d3748;
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .chart-card h3 { font-size: 14px; font-weight: 600; color: #cbd5e1; margin-bottom: 18px; }
+    .chart-wrap { position: relative; height: 320px; }
+
+    .footer {
+      text-align: center;
+      padding: 24px;
+      color: #64748b;
+      font-size: 12px;
+      border-top: 1px solid #2d3748;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-left">
+      <h1>📱 小红书数据分析</h1>
+      <p>数据周期：2026年3月 | 最新数据：2026-04-01</p>
+    </div>
+    <div class="platform-badge">
+      <span>小红书 (FBI)</span>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- 3月汇总 KPI -->
+    <div class="section-title">📈 3月核心指标汇总</div>
+    <div class="kpi-grid">
+      <div class="kpi-card red">
+        <div class="kpi-icon">👥</div>
+        <div class="kpi-label">总 DAU</div>
+        <div class="kpi-value">3,024,513</div>
+        <div class="kpi-sub">3月累计日活</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-icon">📈</div>
+        <div class="kpi-label">日均新增</div>
+        <div class="kpi-value">24,000</div>
+        <div class="kpi-sub">平均每日新增</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-icon">💰</div>
+        <div class="kpi-label">总充值</div>
+        <div class="kpi-value">¥310,290</div>
+        <div class="kpi-sub">3月总收入</div>
+      </div>
+      <div class="kpi-card purple">
+        <div class="kpi-icon">💳</div>
+        <div class="kpi-label">日均充值</div>
+        <div class="kpi-value">¥10,010</div>
+        <div class="kpi-sub">平均每日收入</div>
+      </div>
+      <div class="kpi-card orange">
+        <div class="kpi-icon">📺</div>
+        <div class="kpi-label">平均观影率</div>
+        <div class="kpi-value">86.8%</div>
+        <div class="kpi-sub">新增用户观影</div>
+      </div>
+      <div class="kpi-card pink">
+        <div class="kpi-icon">📊</div>
+        <div class="kpi-label">广告点击率</div>
+        <div class="kpi-value">12.3%</div>
+        <div class="kpi-sub">平均点击率</div>
+      </div>
+      <div class="kpi-card cyan">
+        <div class="kpi-icon">🎯</div>
+        <div class="kpi-label">渠道占比</div>
+        <div class="kpi-value">75.2%</div>
+        <div class="kpi-sub">买量新增占比</div>
+      </div>
+      <div class="kpi-card indigo">
+        <div class="kpi-icon">📱</div>
+        <div class="kpi-label">iOS 占比</div>
+        <div class="kpi-value">27.1%</div>
+        <div class="kpi-sub">平均 iOS 新增</div>
+      </div>
+    </div>
+
+    <!-- 4月1日最新数据 -->
+    <div class="section-title">🔥 4月1日最新数据</div>
+    <div class="kpi-grid">
+      <div class="kpi-card red">
+        <div class="kpi-icon">👥</div>
+        <div class="kpi-label">DAU</div>
+        <div class="kpi-value">77,197</div>
+        <div class="kpi-sub">日活跃用户</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-icon">📈</div>
+        <div class="kpi-label">新增用户</div>
+        <div class="kpi-value">20,995</div>
+        <div class="kpi-sub">日新增</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-icon">💰</div>
+        <div class="kpi-label">充值金额</div>
+        <div class="kpi-value">¥6,610</div>
+        <div class="kpi-sub">日充值收入</div>
+      </div>
+      <div class="kpi-card purple">
+        <div class="kpi-icon">🎯</div>
+        <div class="kpi-label">渠道新增</div>
+        <div class="kpi-value">16,913</div>
+        <div class="kpi-sub">买量新增 (80.6%)</div>
+      </div>
+      <div class="kpi-card orange">
+        <div class="kpi-icon">🌱</div>
+        <div class="kpi-label">自然新增</div>
+        <div class="kpi-value">4,082</div>
+        <div class="kpi-sub">自然流量 (19.4%)</div>
+      </div>
+      <div class="kpi-card pink">
+        <div class="kpi-icon">📺</div>
+        <div class="kpi-label">观影人数</div>
+        <div class="kpi-value">18,249</div>
+        <div class="kpi-sub">新增观影</div>
+      </div>
+      <div class="kpi-card cyan">
+        <div class="kpi-icon">📊</div>
+        <div class="kpi-label">观影率</div>
+        <div class="kpi-value">86.92%</div>
+        <div class="kpi-sub">新增用户观影率</div>
+      </div>
+      <div class="kpi-card indigo">
+        <div class="kpi-icon">📱</div>
+        <div class="kpi-label">iOS 新增</div>
+        <div class="kpi-value">6,588</div>
+        <div class="kpi-sub">占比 31.38%</div>
+      </div>
+    </div>
+
+    <!-- 趋势图表 -->
+    <div class="section-title">📈 3月趋势分析</div>
+    <div class="charts-row">
+      <div class="chart-card">
+        <h3>日活跃用户趋势（DAU）</h3>
+        <div class="chart-wrap">
+          <canvas id="dauTrend"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>日新增用户趋势</h3>
+        <div class="chart-wrap">
+          <canvas id="newUserTrend"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <h3>日充值金额趋势</h3>
+        <div class="chart-wrap">
+          <canvas id="revenueTrend"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>新增用户来源分布（3月平均）</h3>
+        <div class="chart-wrap">
+          <canvas id="sourceDistribution"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <h3>留存率趋势</h3>
+        <div class="chart-wrap">
+          <canvas id="retentionTrend"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>观影率 & 广告点击率</h3>
+        <div class="chart-wrap">
+          <canvas id="engagementTrend"></canvas>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    数据更新时间：2026-04-03 10:05 | 数据来源：小红书(FBI)后台
+  </div>
+
+  <script>
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.borderColor = '#2d3748';
+    Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+
+    const dates = ['03-01','03-02','03-03','03-04','03-05','03-06','03-07','03-08','03-09','03-10','03-11','03-12','03-13','03-14','03-15','03-16','03-17','03-18','03-19','03-20','03-21','03-22','03-23','03-24','03-25','03-26','03-27','03-28','03-29','03-30','03-31'];
+    
+    const dauData = [133317,117836,115722,107284,95558,105690,120783,114880,85321,82824,85098,86711,102389,121065,113218,86178,87702,88938,88051,103354,118173,106126,78131,75908,76904,76049,86165,98800,94425,71010,74523];
+    
+    const newUserData = [29864,26374,25650,22834,19661,23995,28489,25066,16609,15608,16392,18190,26134,37233,32029,23683,23333,24604,23157,31630,39608,30603,19516,18741,19387,19474,23528,29546,26909,17934,20123];
+    
+    const revenueData = [15840,12200,10890,12410,9610,7750,16460,22550,14700,11710,10500,9740,14460,11790,12530,9010,9970,8280,7380,8780,10810,8940,7700,6410,5050,6930,7510,9540,7920,6720,6490];
+
+    // DAU 趋势
+    new Chart(document.getElementById('dauTrend'), {
+      type: 'line',
+      data: {
+        labels: dates,
+        datasets: [{
+          label: 'DAU',
+          data: dauData,
+          borderColor: '#ff2442',
+          backgroundColor: 'rgba(255, 36, 66, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, grid: { color: '#1e293b' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // 新增用户趋势
+    new Chart(document.getElementById('newUserTrend'), {
+      type: 'bar',
+      data: {
+        labels: dates,
+        datasets: [{
+          label: '日新增',
+          data: newUserData,
+          backgroundColor: '#3b82f6'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, grid: { color: '#1e293b' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // 充值趋势
+    new Chart(document.getElementById('revenueTrend'), {
+      type: 'line',
+      data: {
+        labels: dates,
+        datasets: [{
+          label: '日充值',
+          data: revenueData,
+          borderColor: '#10b981',
+          backgroundColor: 'rgba(16, 185, 129, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, grid: { color: '#1e293b' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // 新增来源分布
+    new Chart(document.getElementById('sourceDistribution'), {
+      type: 'doughnut',
+      data: {
+        labels: ['渠道新增', '自然新增', '内导新增'],
+        datasets: [{
+          data: [75.2, 20.5, 1.3],
+          backgroundColor: ['#f59e0b', '#10b981', '#06b6d4'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right' }
+        }
+      }
+    });
+
+    // 留存率趋势
+    new Chart(document.getElementById('retentionTrend'), {
+      type: 'line',
+      data: {
+        labels: dates.slice(0, 29),
+        datasets: [
+          {
+            label: '次留',
+            data: [14.41,16.39,14.99,14.85,16.60,18.48,16.44,13.19,16.56,17.54,16.26,16.42,18.10,16.25,11.44,15.94,15.66,15.41,15.47,18.10,14.94,10.73,14.87,14.68,14.72,15.25,17.59,15.26,10.76],
+            borderColor: '#ec4899',
+            tension: 0.4
+          },
+          {
+            label: '3留',
+            data: [7.33,7.34,7.47,8.49,8.98,6.86,6.54,7.89,9.57,9.95,9.40,8.70,6.78,6.19,7.18,8.93,15.66,8.51,8.38,6.64,5.31,6.22,7.69,7.40,7.83,7.98,5.68,5.35,6.37],
+            borderColor: '#06b6d4',
+            tension: 0.4
+          },
+          {
+            label: '7留',
+            data: [5.63,4.72,4.61,5.15,5.36,6.17,7.64,7.56,6.30,6.55,6.39,6.13,6.78,7.39,6.73,5.65,5.68,5.08,4.98,5.89,6.67,6.30,5.18,4.82,5.14,null,null,null,null],
+            borderColor: '#8b5cf6',
+            tension: 0.4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'top' } },
+        scales: {
+          y: { beginAtZero: true, grid: { color: '#1e293b' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // 观影率 & 广告点击率
+    new Chart(document.getElementById('engagementTrend'), {
+      type: 'line',
+      data: {
+        labels: dates,
+        datasets: [
+          {
+            label: '观影率',
+            data: [87.45,87.24,87.61,87.45,87.28,87.20,87.45,86.66,91.13,85.08,82.24,50.83,85.66,87.37,87.20,87.17,85.72,87.17,87.36,86.87,87.99,87.70,87.37,86.60,85.83,86.62,87.39,88.12,87.78,87.09,87.16],
+            borderColor: '#10b981',
+            tension: 0.4,
+            yAxisID: 'y'
+          },
+          {
+            label: '广告点击率',
+            data: [13.59,13.51,13.70,13.04,12.84,12.79,14.14,13.76,12.78,13.13,12.70,12.93,12.89,13.69,12.79,11.61,11.85,11.72,11.31,12.19,12.92,11.90,10.87,10.73,10.76,10.76,11.26,12.73,12.37,10.81,10.86],
+            borderColor: '#f59e0b',
+            tension: 0.4,
+            yAxisID: 'y1'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'top' } },
+        scales: {
+          y: { 
+            type: 'linear',
+            position: 'left',
+            beginAtZero: true,
+            max: 100,
+            grid: { color: '#1e293b' },
+            title: { display: true, text: '观影率 (%)' }
+          },
+          y1: {
+            type: 'linear',
+            position: 'right',
+            beginAtZero: true,
+            max: 20,
+            grid: { display: false },
+            title: { display: true, text: '广告点击率 (%)' }
+          },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

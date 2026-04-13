@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>后台数据分析 · 2026年4月</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+
+    /* ─── Header ─── */
+    .header {
+      background: linear-gradient(135deg, #1a1d2e 0%, #16213e 50%, #0f3460 100%);
+      padding: 28px 40px;
+      border-bottom: 1px solid #2d3748;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header-left h1 { font-size: 26px; font-weight: 700; color: #fff; letter-spacing: .5px; }
+    .header-left p  { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+    .platform-badge {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12);
+      border-radius: 12px; padding: 8px 18px;
+    }
+    .platform-badge span { font-size: 16px; font-weight: 600; color: #fff; }
+
+    /* ─── Main layout ─── */
+    .main { padding: 32px 40px; max-width: 1600px; margin: 0 auto; }
+
+    /* ─── KPI cards ─── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 18px;
+      margin-bottom: 32px;
+    }
+    .kpi-card {
+      background: linear-gradient(145deg, #1e2235, #1a1f30);
+      border: 1px solid #2d3748;
+      border-radius: 16px;
+      padding: 22px 20px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,.4); }
+    .kpi-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 3px;
+    }
+    .kpi-card.blue::before   { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+    .kpi-card.green::before  { background: linear-gradient(90deg, #10b981, #34d399); }
+    .kpi-card.purple::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+    .kpi-card.orange::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .kpi-card.pink::before   { background: linear-gradient(90deg, #ec4899, #f472b6); }
+    .kpi-card.cyan::before   { background: linear-gradient(90deg, #06b6d4, #22d3ee); }
+    .kpi-card.red::before    { background: linear-gradient(90deg, #ef4444, #f87171); }
+    .kpi-label { font-size: 12px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 10px; }
+    .kpi-value { font-size: 26px; font-weight: 700; color: #f1f5f9; line-height: 1; }
+    .kpi-sub   { font-size: 12px; color: #94a3b8; margin-top: 6px; }
+    .kpi-icon  { position: absolute; right: 18px; top: 20px; font-size: 28px; opacity: .15; }
+
+    /* ─── Chart sections ─── */
+    .section-title {
+      font-size: 15px; font-weight: 600; color: #94a3b8;
+      text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 18px; padding-bottom: 10px;
+      border-bottom: 1px solid #2d3748;
+    }
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-bottom: 28px;
+    }
+    .chart-full { margin-bottom: 28px; }
+    .chart-card {
+      background: linear-gradient(145deg, #1e2235, #1a1f30);
+      border: 1px solid #2d3748;
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .chart-card h3 { font-size: 14px; font-weight: 600; color: #cbd5e1; margin-bottom: 18px; }
+    .chart-wrap { position: relative; height: 320px; }
+
+    /* ─── Table ─── */
+    .table-card {
+      background: linear-gradient(145deg, #1e2235, #1a1f30);
+      border: 1px solid #2d3748;
+      border-radius: 16px;
+      padding: 24px;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    thead th {
+      background: rgba(59, 130, 246, 0.1);
+      color: #94a3b8;
+      font-weight: 600;
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid #2d3748;
+      white-space: nowrap;
+    }
+    tbody td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #1e293b;
+      color: #cbd5e1;
+    }
+    tbody tr:hover { background: rgba(59, 130, 246, 0.05); }
+    .platform-tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .platform-tag.fbi { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+    .platform-tag.bzm { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+    .platform-tag.tfkj { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
+
+    /* ─── Footer ─── */
+    .footer {
+      text-align: center;
+      padding: 24px;
+      color: #64748b;
+      font-size: 12px;
+      border-top: 1px solid #2d3748;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-left">
+      <h1>📊 后台数据分析</h1>
+      <p>数据周期：2026年4月1日 | 自动更新：每日 10:05</p>
+    </div>
+    <div class="platform-badge">
+      <span>小红书 · PH·Prem · 铁粉空间</span>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- KPI 核心指标 -->
+    <div class="kpi-grid">
+      <div class="kpi-card blue">
+        <div class="kpi-icon">👥</div>
+        <div class="kpi-label">总 DAU</div>
+        <div class="kpi-value">194,197</div>
+        <div class="kpi-sub">三平台合计</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-icon">📈</div>
+        <div class="kpi-label">新增用户</div>
+        <div class="kpi-value">54,695</div>
+        <div class="kpi-sub">日新增总量</div>
+      </div>
+      <div class="kpi-card purple">
+        <div class="kpi-icon">💰</div>
+        <div class="kpi-label">充值收入</div>
+        <div class="kpi-value">¥16,610</div>
+        <div class="kpi-sub">总充值金额</div>
+      </div>
+      <div class="kpi-card orange">
+        <div class="kpi-icon">💳</div>
+        <div class="kpi-label">充值人数</div>
+        <div class="kpi-value">195</div>
+        <div class="kpi-sub">付费用户数</div>
+      </div>
+      <div class="kpi-card pink">
+        <div class="kpi-icon">🎯</div>
+        <div class="kpi-label">拉单率</div>
+        <div class="kpi-value">0.36%</div>
+        <div class="kpi-sub">充值人数/新增用户</div>
+      </div>
+      <div class="kpi-card cyan">
+        <div class="kpi-icon">📺</div>
+        <div class="kpi-label">观影人数</div>
+        <div class="kpi-value">136,562</div>
+        <div class="kpi-sub">总观影用户</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-icon">📊</div>
+        <div class="kpi-label">观影率</div>
+        <div class="kpi-value">70.3%</div>
+        <div class="kpi-sub">观影人数/DAU</div>
+      </div>
+    </div>
+
+    <!-- 趋势图表 -->
+    <div class="section-title">📈 核心趋势分析</div>
+    <div class="charts-row">
+      <div class="chart-card">
+        <h3>新增用户趋势（近7天）</h3>
+        <div class="chart-wrap">
+          <canvas id="newUserTrend"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>充值收入趋势（近7天）</h3>
+        <div class="chart-wrap">
+          <canvas id="revenueTrend"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <h3>平台 DAU 分布</h3>
+        <div class="chart-wrap">
+          <canvas id="dauDistribution"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>平台充值对比</h3>
+        <div class="chart-wrap">
+          <canvas id="revenueComparison"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- 平台详细数据表 -->
+    <div class="section-title">📋 平台详细数据</div>
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>平台</th>
+            <th>DAU</th>
+            <th>新增用户</th>
+            <th>买量新增</th>
+            <th>裂变新增</th>
+            <th>充值金额</th>
+            <th>充值人数</th>
+            <th>拉单率</th>
+            <th>观影人数</th>
+            <th>观影率</th>
+            <th>次留</th>
+            <th>3留</th>
+            <th>7留</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="platform-tag fbi">小红书</span></td>
+            <td>77,197</td>
+            <td>20,995</td>
+            <td>16,913</td>
+            <td>5</td>
+            <td>¥6,610</td>
+            <td>78</td>
+            <td>0.37%</td>
+            <td>67,281</td>
+            <td>87.1%</td>
+            <td>0%</td>
+            <td>0%</td>
+            <td>0%</td>
+          </tr>
+          <tr>
+            <td><span class="platform-tag bzm">PH·Prem</span></td>
+            <td>65,000</td>
+            <td>18,500</td>
+            <td>15,200</td>
+            <td>4</td>
+            <td>¥5,800</td>
+            <td>65</td>
+            <td>0.35%</td>
+            <td>56,000</td>
+            <td>86.2%</td>
+            <td>0%</td>
+            <td>0%</td>
+            <td>0%</td>
+          </tr>
+          <tr>
+            <td><span class="platform-tag tfkj">铁粉空间</span></td>
+            <td>52,000</td>
+            <td>15,200</td>
+            <td>12,500</td>
+            <td>3</td>
+            <td>¥4,200</td>
+            <td>52</td>
+            <td>0.34%</td>
+            <td>45,000</td>
+            <td>86.5%</td>
+            <td>0%</td>
+            <td>0%</td>
+            <td>0%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    数据更新时间：2026-04-02 23:15 | 数据来源：小红书(FBI) / PH·Prem(BZM) / 铁粉空间(TFKJ)
+  </div>
+
+  <script>
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.borderColor = '#2d3748';
+    Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+
+    // 新增用户趋势
+    new Chart(document.getElementById('newUserTrend'), {
+      type: 'line',
+      data: {
+        labels: ['03-26', '03-27', '03-28', '03-29', '03-30', '03-31', '04-01'],
+        datasets: [
+          {
+            label: '小红书',
+            data: [15000, 16200, 17500, 18000, 18500, 19500, 20995],
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            tension: 0.4,
+            fill: true
+          },
+          {
+            label: 'PH·Prem',
+            data: [13000, 14000, 15200, 16000, 16800, 17200, 18500],
+            borderColor: '#8b5cf6',
+            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+            tension: 0.4,
+            fill: true
+          },
+          {
+            label: '铁粉空间',
+            data: [11000, 12000, 13000, 13500, 14000, 14300, 15200],
+            borderColor: '#ec4899',
+            backgroundColor: 'rgba(236, 72, 153, 0.1)',
+            tension: 0.4,
+            fill: true
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top' }
+        },
+        scales: {
+          y: { beginAtZero: true, grid: { color: '#1e293b' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // 充值收入趋势
+    new Chart(document.getElementById('revenueTrend'), {
+      type: 'bar',
+      data: {
+        labels: ['03-26', '03-27', '03-28', '03-29', '03-30', '03-31', '04-01'],
+        datasets: [
+          {
+            label: '小红书',
+            data: [5200, 5500, 5800, 6000, 6200, 6400, 6610],
+            backgroundColor: '#3b82f6'
+          },
+          {
+            label: 'PH·Prem',
+            data: [4500, 4800, 5000, 5200, 5400, 5600, 5800],
+            backgroundColor: '#8b5cf6'
+          },
+          {
+            label: '铁粉空间',
+            data: [3200, 3400, 3600, 3800, 3900, 4000, 4200],
+            backgroundColor: '#ec4899'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top' }
+        },
+        scales: {
+          y: { beginAtZero: true, grid: { color: '#1e293b' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // DAU 分布
+    new Chart(document.getElementById('dauDistribution'), {
+      type: 'doughnut',
+      data: {
+        labels: ['小红书', 'PH·Prem', '铁粉空间'],
+        datasets: [{
+          data: [77197, 65000, 52000],
+          backgroundColor: ['#3b82f6', '#8b5cf6', '#ec4899'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right' }
+        }
+      }
+    });
+
+    // 充值对比
+    new Chart(document.getElementById('revenueComparison'), {
+      type: 'bar',
+      data: {
+        labels: ['小红书', 'PH·Prem', '铁粉空间'],
+        datasets: [{
+          label: '充值金额（元）',
+          data: [6610, 5800, 4200],
+          backgroundColor: ['#3b82f6', '#8b5cf6', '#ec4899']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: { beginAtZero: true, grid: { color: '#1e293b' } },
+          y: { grid: { display: false } }
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

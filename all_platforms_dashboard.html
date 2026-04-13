@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>四平台数据汇总 · 2026年3月</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      padding: 28px 40px;
+      border-bottom: 1px solid #2d3748;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header-left h1 { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: .5px; }
+    .header-left p  { font-size: 13px; color: rgba(255,255,255,0.9); margin-top: 4px; }
+    .platform-badges {
+      display: flex; gap: 10px; flex-wrap: wrap;
+    }
+    .platform-badge {
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.2);
+      border-radius: 8px; padding: 6px 12px;
+      font-size: 13px; font-weight: 600; color: #fff;
+    }
+
+    .main { padding: 32px 40px; max-width: 1800px; margin: 0 auto; }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 18px;
+      margin-bottom: 32px;
+    }
+    .kpi-card {
+      background: linear-gradient(145deg, #1e2235, #1a1f30);
+      border: 1px solid #2d3748;
+      border-radius: 16px;
+      padding: 22px 20px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,.4); }
+    .kpi-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 3px;
+    }
+    .kpi-card.gradient::before { background: linear-gradient(90deg, #667eea, #764ba2, #f093fb); }
+    .kpi-card.blue::before   { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+    .kpi-card.green::before  { background: linear-gradient(90deg, #10b981, #34d399); }
+    .kpi-card.purple::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+    .kpi-card.orange::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .kpi-card.pink::before   { background: linear-gradient(90deg, #ec4899, #f472b6); }
+    .kpi-label { font-size: 12px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 10px; }
+    .kpi-value { font-size: 28px; font-weight: 700; color: #f1f5f9; line-height: 1; }
+    .kpi-sub   { font-size: 12px; color: #94a3b8; margin-top: 6px; }
+    .kpi-icon  { position: absolute; right: 18px; top: 20px; font-size: 30px; opacity: .15; }
+
+    .section-title {
+      font-size: 15px; font-weight: 600; color: #94a3b8;
+      text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 18px; padding-bottom: 10px;
+      border-bottom: 1px solid #2d3748;
+    }
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-bottom: 28px;
+    }
+    .chart-full {
+      margin-bottom: 28px;
+    }
+    .chart-card {
+      background: linear-gradient(145deg, #1e2235, #1a1f30);
+      border: 1px solid #2d3748;
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .chart-card h3 { font-size: 14px; font-weight: 600; color: #cbd5e1; margin-bottom: 18px; }
+    .chart-wrap { position: relative; height: 350px; }
+
+    .platform-section {
+      background: linear-gradient(145deg, #1e2235, #1a1f30);
+      border: 1px solid #2d3748;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .platform-section h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #2d3748;
+    }
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+    }
+    .platform-metric {
+      padding: 12px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+    }
+    .platform-metric .label { font-size: 11px; color: #64748b; margin-bottom: 6px; }
+    .platform-metric .value { font-size: 18px; font-weight: 700; color: #f1f5f9; }
+
+    .footer {
+      text-align: center;
+      padding: 24px;
+      color: #64748b;
+      font-size: 12px;
+      border-top: 1px solid #2d3748;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-left">
+      <h1>📊 四平台数据汇总</h1>
+      <p>数据周期：2026年3月 | 最新数据：2026-04-01</p>
+    </div>
+    <div class="platform-badges">
+      <div class="platform-badge">TikTok</div>
+      <div class="platform-badge">小红书</div>
+      <div class="platform-badge">PH·Prem</div>
+      <div class="platform-badge">铁粉空间</div>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- 汇总 KPI -->
+    <div class="section-title">📈 3月整体数据汇总</div>
+    <div class="kpi-grid">
+      <div class="kpi-card gradient">
+        <div class="kpi-icon">👥</div>
+        <div class="kpi-label">总 DAU</div>
+        <div class="kpi-value">9,849,039</div>
+        <div class="kpi-sub">四平台累计</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-icon">📈</div>
+        <div class="kpi-label">总新增用户</div>
+        <div class="kpi-value">3,400,000+</div>
+        <div class="kpi-sub">3月累计</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-icon">💰</div>
+        <div class="kpi-label">总充值</div>
+        <div class="kpi-value">¥1,356,470</div>
+        <div class="kpi-sub">3月总收入</div>
+      </div>
+      <div class="kpi-card purple">
+        <div class="kpi-icon">💳</div>
+        <div class="kpi-label">日均充值</div>
+        <div class="kpi-value">¥43,757</div>
+        <div class="kpi-sub">平均每日</div>
+      </div>
+      <div class="kpi-card orange">
+        <div class="kpi-icon">📺</div>
+        <div class="kpi-label">平均观影率</div>
+        <div class="kpi-value">87.7%</div>
+        <div class="kpi-sub">新增用户</div>
+      </div>
+      <div class="kpi-card pink">
+        <div class="kpi-icon">📱</div>
+        <div class="kpi-label">iOS 占比</div>
+        <div class="kpi-value">26.2%</div>
+        <div class="kpi-sub">平均占比</div>
+      </div>
+    </div>
+
+    <!-- 平台对比图表 -->
+    <div class="section-title">📊 平台数据对比</div>
+    <div class="charts-row">
+      <div class="chart-card">
+        <h3>3月 DAU 分布</h3>
+        <div class="chart-wrap">
+          <canvas id="dauDistribution"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>3月充值收入对比</h3>
+        <div class="chart-wrap">
+          <canvas id="revenueComparison"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-full">
+      <div class="chart-card">
+        <h3>日新增用户趋势对比（3月）</h3>
+        <div class="chart-wrap">
+          <canvas id="newUserTrend"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <h3>平台观影率对比</h3>
+        <div class="chart-wrap">
+          <canvas id="watchRateComparison"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>平台 iOS 占比对比</h3>
+        <div class="chart-wrap">
+          <canvas id="iosRateComparison"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- 各平台详细数据 -->
+    <div class="section-title">📋 各平台详细数据（4月1日）</div>
+    
+    <div class="platform-section">
+      <h3>🎵 TikTok</h3>
+      <div class="platform-grid">
+        <div class="platform-metric">
+          <div class="label">DAU</div>
+          <div class="value">223,126</div>
+        </div>
+        <div class="platform-metric">
+          <div class="label">新增用户</div>
+          <div class="value">70,614</div>
+        </div>
+        <div class="platform-metric">
+          <div class="label">充值金额</div>
+          <div class="value">¥22,510</div>
+        </div>
+        <div class="platform-metric">
+          <div class="label">观影率</div>
+          <div class="value">96.78%</div>
+        </div>
+        <div class="platform-metric">
+          <div class="label">iOS 占比</div>
+          <div class="value">25.87%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="platform-section">
+      <h3>📱 小红书 (FBI)</h3>
+      <div class="platform-grid">
+        <div class="platform-metric">
+          <div class="label">DAU</div>
+          <div class="value">77,197</div>
+        </div>
+        <div class="platform-metric">
+          <div class="label">新增用户</div>
+          <div class="value">20,995</div>
+        </div>
+        <div class="platform-metric">
+          <div class="label">充值金额</div>
+          <div class="value">¥6,610</div>
+        </div>
+        <div class="platform-metric">
+          <div class="label">观影率</div>
+          <div class="value">86.92%</div>
+        </div>
+        <div class="platform-metric">
+          <div class="label">iOS 占比</div>
+          <div class="value">31.38%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="platform-section">
+      <h3>🎯 PH·Prem (BZM)</h3>
+      <div class="platform-grid">
+        <div class="platform-metric">
+          <div class="label">DAU</div>
+          <div class="value">31,084</div>
+        </div>
+        <div class="platform-metric">
+          <div class="label">新增用户</div>
+          <div class="value">5,328</div>
+        </div>
+        <div class="platform-metric">
+          <div class="label">充值金额</div>
+          <div class="value">¥3,630</div>
+        </div>
+        <div class="platform-metric">
+          <div class="label">观影率</div>
+          <div class="value">87.56%</div>
+        </div>
+        <div class="platform-metric">
+          <div class="label">iOS 占比</div>
+          <div class="value">35.83%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="platform-section">
+      <h3>⭐ 铁粉空间 (TFKJ)</h3>
+      <div class="platform-grid">
+        <div class="platform-metric">
+          <div class="label">DAU</div>
+          <div class="value">13,388</div>
+        </div>
+        <div class="platform-metric">
+          <div class="label">新增用户</div>
+          <div class="value">2,176</div>
+        </div>
+        <div class="platform-metric">
+          <div class="label">充值金额</div>
+          <div class="value">¥1,240</div>
+        </div>
+        <div class="platform-metric">
+          <div class="label">观影率</div>
+          <div class="value">83.73%</div>
+        </div>
+        <div class="platform-metric">
+          <div class="label">iOS 占比</div>
+          <div class="value">32.17%</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    数据更新时间：2026-04-03 12:36 | 数据来源：TikTok / 小红书(FBI) / PH·Prem(BZM) / 铁粉空间(TFKJ)
+  </div>
+
+  <script>
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.borderColor = '#2d3748';
+    Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+
+    // DAU 分布
+    new Chart(document.getElementById('dauDistribution'), {
+      type: 'doughnut',
+      data: {
+        labels: ['TikTok', '小红书', 'PH·Prem', '铁粉空间'],
+        datasets: [{
+          data: [7492673, 3024513, 1548809, 583044],
+          backgroundColor: ['#3b82f6', '#ff2442', '#8b5cf6', '#ec4899'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right' },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                const value = context.parsed;
+                const percentage = ((value / total) * 100).toFixed(1);
+                return context.label + ': ' + value.toLocaleString() + ' (' + percentage + '%)';
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // 充值收入对比
+    new Chart(document.getElementById('revenueComparison'), {
+      type: 'bar',
+      data: {
+        labels: ['TikTok', '小红书', 'PH·Prem', '铁粉空间'],
+        datasets: [{
+          label: '3月总充值（元）',
+          data: [776050, 310290, 199820, 70310],
+          backgroundColor: ['#3b82f6', '#ff2442', '#8b5cf6', '#ec4899']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: { 
+            beginAtZero: true, 
+            grid: { color: '#1e293b' },
+            ticks: {
+              callback: function(value) {
+                return '¥' + (value / 1000).toFixed(0) + 'k';
+              }
+            }
+          },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // 新增用户趋势（取最后7天）
+    new Chart(document.getElementById('newUserTrend'), {
+      type: 'line',
+      data: {
+        labels: ['03-26', '03-27', '03-28', '03-29', '03-30', '03-31', '04-01'],
+        datasets: [
+          {
+            label: 'TikTok',
+            data: [69976, 93230, 113041, 99290, 63517, 67096, 70614],
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            tension: 0.4,
+            fill: true
+          },
+          {
+            label: '小红书',
+            data: [19474, 23528, 29546, 26909, 17934, 20123, 20995],
+            borderColor: '#ff2442',
+            backgroundColor: 'rgba(255, 36, 66, 0.1)',
+            tension: 0.4,
+            fill: true
+          },
+          {
+            label: 'PH·Prem',
+            data: [6573, 8154, 9778, 8780, 5658, 5401, 5328],
+            borderColor: '#8b5cf6',
+            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+            tension: 0.4,
+            fill: true
+          },
+          {
+            label: '铁粉空间',
+            data: [2063, 2441, 2661, 2564, 2035, 2142, 2176],
+            borderColor: '#ec4899',
+            backgroundColor: 'rgba(236, 72, 153, 0.1)',
+            tension: 0.4,
+            fill: true
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top' }
+        },
+        scales: {
+          y: { beginAtZero: true, grid: { color: '#1e293b' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // 观影率对比
+    new Chart(document.getElementById('watchRateComparison'), {
+      type: 'bar',
+      data: {
+        labels: ['TikTok', '小红书', 'PH·Prem', '铁粉空间'],
+        datasets: [{
+          label: '平均观影率 (%)',
+          data: [91.5, 86.8, 88.1, 84.2],
+          backgroundColor: ['#3b82f6', '#ff2442', '#8b5cf6', '#ec4899']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: { 
+            beginAtZero: true, 
+            max: 100,
+            grid: { color: '#1e293b' },
+            ticks: {
+              callback: function(value) {
+                return value + '%';
+              }
+            }
+          },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // iOS 占比对比
+    new Chart(document.getElementById('iosRateComparison'), {
+      type: 'bar',
+      data: {
+        labels: ['TikTok', '小红书', 'PH·Prem', '铁粉空间'],
+        datasets: [{
+          label: 'iOS 占比 (%)',
+          data: [21.5, 27.1, 30.2, 25.8],
+          backgroundColor: ['#3b82f6', '#ff2442', '#8b5cf6', '#ec4899']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: { 
+            beginAtZero: true, 
+            max: 40,
+            grid: { color: '#1e293b' },
+            ticks: {
+              callback: function(value) {
+                return value + '%';
+              }
+            }
+          },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

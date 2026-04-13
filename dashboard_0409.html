@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>四平台数据分析 · 2026-04-09</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      padding: 28px 40px;
+      border-bottom: 1px solid #2d3748;
+    }
+    .header h1 { font-size: 28px; font-weight: 700; color: #fff; }
+    .header p  { font-size: 13px; color: rgba(255,255,255,0.9); margin-top: 4px; }
+    .main { padding: 32px 40px; max-width: 1800px; margin: 0 auto; }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 18px;
+      margin-bottom: 32px;
+    }
+    .kpi-card {
+      background: linear-gradient(145deg, #1e2235, #1a1f30);
+      border: 1px solid #2d3748;
+      border-radius: 16px;
+      padding: 22px 20px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .2s;
+    }
+    .kpi-card:hover { transform: translateY(-3px); }
+    .kpi-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+    }
+    .kpi-label { font-size: 12px; color: #64748b; margin-bottom: 10px; }
+    .kpi-value { font-size: 28px; font-weight: 700; color: #f1f5f9; }
+    .kpi-sub   { font-size: 12px; color: #94a3b8; margin-top: 6px; }
+    .kpi-trend {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+    .trend-up { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+    .trend-down { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+    .section-title {
+      font-size: 15px; font-weight: 600; color: #94a3b8;
+      margin-bottom: 18px; padding-bottom: 10px;
+      border-bottom: 1px solid #2d3748;
+    }
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-bottom: 28px;
+    }
+    .chart-card {
+      background: linear-gradient(145deg, #1e2235, #1a1f30);
+      border: 1px solid #2d3748;
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .chart-card h3 { font-size: 14px; font-weight: 600; color: #cbd5e1; margin-bottom: 18px; }
+    .chart-wrap { position: relative; height: 350px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      background: linear-gradient(145deg, #1e2235, #1a1f30);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    thead th {
+      background: rgba(102, 126, 234, 0.1);
+      color: #94a3b8;
+      font-weight: 600;
+      padding: 12px;
+      border-bottom: 1px solid #2d3748;
+    }
+    tbody td {
+      padding: 12px;
+      border-bottom: 1px solid #1e293b;
+      color: #cbd5e1;
+    }
+    tbody tr:hover { background: rgba(102, 126, 234, 0.05); }
+    .platform-tag {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .tag-tiktok { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+    .tag-xhs { background: rgba(255, 36, 66, 0.2); color: #ff6b6b; }
+    .tag-php { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+    .tag-tfkj { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>📊 四平台数据分析</h1>
+    <p>数据日期：2026-04-09 | TikTok · 小红书 · PH·Prem · 铁粉空间</p>
+  </div>
+
+  <div class="main">
+    <div class="section-title">📈 核心指标汇总</div>
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">总 DAU</div>
+        <div class="kpi-value">291,745</div>
+        <div class="kpi-trend trend-down">▼ -1.41%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">总新增用户</div>
+        <div class="kpi-value">85,000</div>
+        <div class="kpi-trend trend-down">▼ -3.93%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">总充值收入</div>
+        <div class="kpi-value">¥22,190</div>
+        <div class="kpi-trend trend-down">▼ -11.52%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">充值人数</div>
+        <div class="kpi-value">286</div>
+        <div class="kpi-trend trend-down">▼ -7.74%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">平均观影率</div>
+        <div class="kpi-value">87.24%</div>
+        <div class="kpi-trend trend-up">▲ +0.67%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">自然流量占比</div>
+        <div class="kpi-value">20.0%</div>
+        <div class="kpi-trend trend-up">▲ +19.0%</div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <h3>各平台 DAU 对比</h3>
+        <div class="chart-wrap">
+          <canvas id="dauChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>充值收入对比</h3>
+        <div class="chart-wrap">
+          <canvas id="revenueChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <h3>新增用户来源分布</h3>
+        <div class="chart-wrap">
+          <canvas id="sourceChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>充值人数对比</h3>
+        <div class="chart-wrap">
+          <canvas id="payerChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">📋 详细数据表</div>
+    <table>
+      <thead>
+        <tr>
+          <th>平台</th>
+          <th>DAU</th>
+          <th>新增用户</th>
+          <th>充值金额</th>
+          <th>充值人数</th>
+          <th>ARPU</th>
+          <th>充值成功率</th>
+          <th>观影率</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="platform-tag tag-tiktok">TikTok</span></td>
+          <td>190,740</td>
+          <td>62,720</td>
+          <td>¥14,030</td>
+          <td>189</td>
+          <td>¥0.074</td>
+          <td>8.55%</td>
+          <td>87.27%</td>
+        </tr>
+        <tr>
+          <td><span class="platform-tag tag-xhs">小红书</span></td>
+          <td>61,848</td>
+          <td>14,277</td>
+          <td>¥5,120</td>
+          <td>57</td>
+          <td>¥0.083</td>
+          <td>26.34%</td>
+          <td>86.99%</td>
+        </tr>
+        <tr>
+          <td><span class="platform-tag tag-php">PH·Prem</span></td>
+          <td>24,457</td>
+          <td>4,334</td>
+          <td>¥2,290</td>
+          <td>31</td>
+          <td>¥0.094</td>
+          <td>22.79%</td>
+          <td>87.78%</td>
+        </tr>
+        <tr>
+          <td><span class="platform-tag tag-tfkj">铁粉空间</span></td>
+          <td>14,700</td>
+          <td>3,669</td>
+          <td>¥750</td>
+          <td>9</td>
+          <td>¥0.051</td>
+          <td>26.47%</td>
+          <td>85.90%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.borderColor = '#2d3748';
+
+    new Chart(document.getElementById('dauChart'), {
+      type: 'bar',
+      data: {
+        labels: ['TikTok', '小红书', 'PH·Prem', '铁粉空间'],
+        datasets: [{
+          data: [190740, 61848, 24457, 14700],
+          backgroundColor: ['#3b82f6', '#ff2442', '#8b5cf6', '#ec4899']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, grid: { color: '#1e293b' } }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('revenueChart'), {
+      type: 'bar',
+      data: {
+        labels: ['TikTok', '小红书', 'PH·Prem', '铁粉空间'],
+        datasets: [{
+          data: [14030, 5120, 2290, 750],
+          backgroundColor: ['#3b82f6', '#ff2442', '#8b5cf6', '#ec4899']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, grid: { color: '#1e293b' } }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('sourceChart'), {
+      type: 'bar',
+      data: {
+        labels: ['TikTok', '小红书', 'PH·Prem', '铁粉空间'],
+        datasets: [
+          {
+            label: '买量',
+            data: [55714, 11100, 2899, 2682],
+            backgroundColor: '#f59e0b'
+          },
+          {
+            label: '自然',
+            data: [11357, 3177, 1435, 987],
+            backgroundColor: '#10b981'
+          },
+          {
+            label: '内导',
+            data: [735, 377, 438, 0],
+            backgroundColor: '#06b6d4'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'top' } },
+        scales: {
+          x: { stacked: true },
+          y: { stacked: true, beginAtZero: true, grid: { color: '#1e293b' } }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('payerChart'), {
+      type: 'bar',
+      data: {
+        labels: ['TikTok', '小红书', 'PH·Prem', '铁粉空间'],
+        datasets: [{
+          data: [189, 57, 31, 9],
+          backgroundColor: ['#3b82f6', '#ff2442', '#8b5cf6', '#ec4899']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, grid: { color: '#1e293b' } }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
